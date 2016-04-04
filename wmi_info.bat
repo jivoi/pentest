@@ -1,0 +1,13 @@
+for /f "delims=" %%A in ('dir /s /b %WINDIR%\system32\*htable.xsl') do set "var=%%A"
+wmic process get CSName,Description,ExecutablePath,ProcessId /format:"%var%" >> out.html
+wmic service get Caption,Name,PathName,ServiceType,Started,StartMode,StartName /format:"%var%" >> out.html
+wmic USERACCOUNT list full /format:"%var%" >> out.html
+wmic group list full /format:"%var%" >> out.html
+wmic nicconfig where IPEnabled='true' get Caption,DefaultIPGateway,Description,DHCPEnabled,DHCPServer,IPAddress,IPSubnet,MACAddress /format:"%var%" >> out.html
+wmic volume get Label,DeviceID,DriveLetter,FileSystem,Capacity,FreeSpace /format:"%var%" >> out.html
+wmic netuse list full /format:"%var%" >> out.html
+wmic qfe get Caption,Description,HotFixID,InstalledOn /format:"%var%" >> out.html
+wmic startup get Caption,Command,Location,User /format:"%var%" >> out.html
+wmic PRODUCT get Description,InstallDate,InstallLocation,PackageCache,Vendor,Version /format:"%var%" >> out.html
+wmic os get name,version,InstallDate,LastBootUpTime,LocalDateTime,Manufacturer,RegisteredUser,ServicePackMajorVersion,Sys temDirectory /format:"%var%" >> out.html
+wmic Timezone get DaylightName,Description,StandardName /format:"%var%" >> out.html
