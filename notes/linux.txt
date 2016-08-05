@@ -1,0 +1,315 @@
+Linux
+ 
+ 
+# Compile
+
+gcc -o test test.c                 Compile test
+chmod 755 test                     Make the file executable
+./test                             Run the file
+------------------------------------------------------------------------------------------------------
+
+# Compression
+
+tar xvfj test.tar.bz2              Extract
+tar zxvf test.tar.gz
+tar zxvf test.tar
+gzip -d test.gz
+unzip test.zip
+ 
+tar -zcvf test.tar test            Compress
+gzip test
+zip -9 test.zip test
+zip -r test.zip test/
+------------------------------------------------------------------------------------------------------ 
+
+# Copy Files
+ 
+Local to remote
+scp /path/to/local/file.txt user@targetIP:/path/to/share
+scp discover.sh root@192.168.1.10:/opt/scripts
+ 
+Remote to local
+scp -r user@targetIP:/path/to/share /local/share
+scp -r root@192.168.1.11:/root/metasploit.xml /root/
+------------------------------------------------------------------------------------------------------
+ 
+# File Permissions
+ 
+t rwx rwx rwx	 type / owner / group / world
+Type is directory (d) or file (-).
+read    (r)	 4
+write   (w)	 2
+execute (e)	 1
+ 
+chmod 755 test.sh                  Make a file executable
+find . -name "*.php" -type f -exec chmod 755 {} \;
+------------------------------------------------------------------------------------------------------
+ 
+# Files
+ 
+ls                                 List files in a directory
+ls -l                              Long form listing
+ls -la                             Long form listing with hidden files
+
+cd ~                               Change to the home directory
+cd test                            Change to the test directory
+pwd                                Show the current directory
+
+cp tmp tmp2                        Copy a file from one location to another
+cp -r dir dir2                     Copy a directory from one location to another
+mv tmp tmp2                        Rename or move tmp to tmp2
+rm tmp                             Delete the file tmp
+rm -rf test                        Force delete the directory test
+
+ln -s app /path/to/app/            Create a symbolic link
+
+mkdir tmp                          Create a directory called tmp
+touch tmp                          Create a file called tmp
+
+cat tmp                            Show the contents of tmp
+cat > tmp                          Create a file called tmp
+cat >> tmp                         Append text to a file called tmp
+
+head tmp                           Show the first 10 lines of tmp
+head -20 tmp                       Show the first 20 lines of tmp
+more tmp                           Show the contents of tmp, one page at a time. Space bar for next page. q to exit
+tail tmp                           Show the last 10 lines of tmp
+tail -20 tmp                       Show the last 20 lines of tmp
+tail -f tmp                        Show the file contents as it grows
+------------------------------------------------------------------------------------------------------
+
+# Finding Files
+
+updatedb                           Update the database of file names on the system
+locate file                        Reads a list of files from the database and show the location of a file
+which app                          Show the path where the app is executed
+find / -name sbd*                  Show all the files that start with sbd
+------------------------------------------------------------------------------------------------------
+
+# Installation
+ 
+./configure                        Install from source
+make
+make install
+
+dpkg -i app.deb                    Install Debian package
+rpm -Uvh app.rpm                   Install RPM package
+
+dpkg-query -l                     Show a list of installed packages
+------------------------------------------------------------------------------------------------------
+
+# Integrity
+
+md5sum test.iso                    MD5
+sha1sum test.iso                   SHA1
+------------------------------------------------------------------------------------------------------
+
+# Networking
+
+dhclient                           Request an IP address from the DHCP server
+route                              Gateway
+/etc/hostname                      Hostname
+/etc/network/interfaces            Network interfaces
+/var/lib/dhcp/dhclient.leases      DHCP
+
+/etc/resolv.conf                   DNS
+domain localdomain 
+search localdomain 
+nameserver 8.8.8.8
+
+ifconfig                           IP address
+ifconfig eth0 down                 Stop interface
+ifconfig eth0 up                   Start interface
+ifconfig eth0 <IP>                 Set IP address
+ifconfig eth0 <IP> netmask <IP>    Set IP and netmask
+route add default gw <IP>          Set gateway
+
+/etc/network/interfaces            Set a static IP address
+iface eth0 inet static
+address 192.168.2.10
+netmask 255.255.255.0
+network 192.168.2.0
+broadcast 192.168.2.255
+gateway 192.168.2.1
+
+/etc/init.d/networking restart     Restart networking
+------------------------------------------------------------------------------------------------------
+
+# Processes
+
+kill -9 <PID>                      Kill process ID
+killall <service>                  Kill all processes named service
+ps aux                             Currently active processes
+top                                Running processes
+------------------------------------------------------------------------------------------------------
+
+# Proxy
+
+Add to /root/.bashrc
+export http_proxy=http://username:password@proxy:port
+export https_proxy=https://username:password@proxy:port
+
+git clone https://github.com/leebaird/discover.git /opt/discover/
+
+nano /root/.subversion/servers
+[global]
+http-proxy-host = proxy
+http-proxy-port = port
+------------------------------------------------------------------------------------------------------
+
+# Searching within files
+
+grep xxx file                      Search for the pattern xxx in a file
+grep -r                            Search recursively for a pattern in a directory
+zgrep                              Search for a pattern in a zip file
+------------------------------------------------------------------------------------------------------
+
+# Screen
+
+ssh into a remote system
+screen -S test                     Start a new screen session named test
+top                                Example command, leave it running
+ctrl A  ctrl D                     Detach from the screen session
+screen -ls                         Show all screen sessions running
+screen -DR test                    Reconnect to the session
+exit                               Leave and close the session
+------------------------------------------------------------------------------------------------------
+
+# Shortcuts
+
+ctrl + alt + t                     Open a Terminal
+ctrl + shift + t                   Open a new tab
+ctrl + a                           Go to the beginning of the line
+ctrl + l                           Clear the screen
+------------------------------------------------------------------------------------------------------
+
+# SSH
+
+ssh-keygen                         Generate new public/private key pair
+ssh root@host                      Connect to host as root
+ssh -p 222 root@host               Connect to host on port 222 as root
+/etc/ssh/sshd_config               Change port that the server is listening on or allow root login
+
+mv amazon.pm /root/.ssh/           Move new Amazon private key to SSH folder
+chmod 600 /root/.ssh/amazon.pem    Change permissions of key
+ssh -i amazon.pem kali@host        Connect to Amazon EC2 as kali with key
+------------------------------------------------------------------------------------------------------
+
+# Startup Services
+
+update-rc.d -f <service> <add/remove>
+
+update-rc.d networking defaults
+/etc/init.d/networking restart
+------------------------------------------------------------------------------------------------------
+
+# System
+
+cal                                Calendar
+date                               Date and time
+df -h                              Disk usage
+du                                 Directory space usage
+env                                Environmental variables
+/etc/issue                         OS info
+fdisk -l                           Partition table
+finger <user>                      Info about a user
+free                               Memory and swap usage
+halt                               Power off
+last                               List last 10 users logged on
+/proc/cpuinfo                      CPU info
+/proc/meminfo                      Memory info
+reboot                             Reboot
+set                                Environmental variables
+uname -a                           Kernel info
+uptime                             Current uptime
+w                                  Logged on users
+whoami                             Who you are logged in as
+------------------------------------------------------------------------------------------------------
+
+# User Accounts
+
+/etc/passwd                        User accounts
+/etc/shadow                        Encrypted passwords
+id                                 User/group permissions
+
+passwd                             Change root password
+passwd <user>                      Change another user's password
+
+su                                 Substitute user
+
+useradd                            Add new user
+userdel                            Delete user
+userdel -r                         Delete user and user's home directory
+usermod                            Modify user
+
+groupadd                           Add new group
+groupdel                           Delete group
+groupmod                           Modify group
+
+adduser <user> <group>             Add user to group
+------------------------------------------------------------------------------------------------------
+
+# vi
+
+vi filename                        Open an existing file
+vi newfile                         Create a new file
+
+Modes                              Command, append, insert and replace
+
+Command mode
+The letters of the keyboard perform editing functions. To enter press <Esc>.
+
+Moving around
+h                                  Left
+j                                  Down
+k                                  Up
+l                                  Right
+w                                  Forward one word
+b                                  Backward one word
+$                                  End of line
+0 (zero)                           Beginning of line
+1G                                 First line of file
+G                                  Last line of file
+
+<esc> u                            Undo
+
+Append mode
+To add text to the end of a line.
+Position the cursor on the last letter of the line.
+Type a
+Enter new text.
+This adds text AFTER the cursor. Press <esc> to return to command mode.
+
+Insert mode
+The letters you type form words and sentences.
+Position the cursor where the new text should go.
+Type i
+Enter new text.
+This adds text BEFORE the cursor. Press <esc> to return to command mode.
+
+Replace mode
+To replace one character with another.
+Move the cursor to the character to be replaced.
+Type r
+Enter the replacement character. Press <esc> to return to command mode.
+
+Search
+Type /
+Enter the search string.
+<Return>
+n	Search forward.
+N	Search backward.
+
+Save changes to a file
+<esc>
+:w
+<Return>
+
+Quit
+<esc>
+:q
+
+Don't save and quit
+<esc>
+:q!
+<Return>
