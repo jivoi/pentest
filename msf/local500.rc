@@ -1,0 +1,5 @@
+use auxiliary/scanner/smb/smb_login
+set smbuser administrator
+set smbdomain WORKGROUP
+set PASS_FILE <path.to.pass_file>
+echo "Set RHOSTS and exploit!"

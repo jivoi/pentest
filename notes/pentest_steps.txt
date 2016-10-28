@@ -1,0 +1,199 @@
+﻿- Reconnaissance
+  - Passive/Semi-Passive
+    - Third Party Resources
+      - Locate Target Range
+        - ARIN - https://www.arin.net/
+      - Fingerprint Domain/Website
+        - Shodan - https://www.shodan.io/
+        - Censys - https://www.censys.io/
+        - Zoomeye - https://www.zoomeye.org
+        - Netcraft - https://www.netcraft.com/
+        - Extended Network Information
+          - Central Ops - https://centralops.net/co/DomainDossier.aspx
+          - Robtex - https://www.robtex.net/
+        - Metasploit Scanning
+          - auxiliary/scanner/*
+            - portscan/tcp
+            - http/http_version
+            - http/tomcat_enum
+            - http/trace_axd
+              - Google - site:<result from above> filetype:axd OR inurl:trace.axd
+    - Command Line Recon
+      - Network Information
+        - nslookup <target>
+          - DNS cache snooping
+        - dig <target>
+      - Security Mechanisms
+        - halberd
+      - Metadata
+        - exiftool
+        - strings
+          - strings -e b (big endian) OR -e l (little endian)
+    - People Search
+      - Yahoo People Search - http://itools.com/tool/yahoo-people-search
+      - Switchboard - http://www.switchboard.com/person
+      - Google Finance - https://www.google.com/finance
+      - Zaba - http://www.zabasearch.com/
+  - Active
+    - Command Line Recon Tools
+      - General Recon
+        - Recon-NG
+          - Automated with https://github.com/jhaddix/domain
+        - Domain/Subdomain Information
+          - Fierce
+          - The Harvester
+          - Dirb
+          - Dirbuster
+      - Nmap
+        - nmap -Pn -sSU -sV --top-ports 20 <target>
+      - Create Custom Worldlist
+        - cewl - https://digi.ninja/projects/cewl.php
+        - wget - http://wiki.securityweekly.com/wiki/index.php/Episode129
+    - Software
+      - FOCA
+      - SPARTA
+      - Maltego
+      - Dirbuster
+  - Browser Extensions
+    - Chrome
+    - Firefox
+    - Safari
+  - Google Searching
+    - site:"target name" jobs,careers,openings,etc
+    - intitle:"index of <Keyword>"
+      - Keyword
+        - .bash_history
+        - etc/shadow
+        - finances.xls(x)
+        - htpasswd
+        - inurl:maillog
+    - site:*.edu filetype:*.bak OR <keyword>
+      - Keyword
+        - *.conf
+        - *.backup
+- Enumeration
+  - Internal
+    - Scanning
+      - Map Internal Network
+        - Command Line Tools
+          - arp -a
+          - ip neigh show
+          - smbtree -NS 2>/dev/null
+          - nbtscan -r <current_IPrange>
+          - netdiscover -r <current_IPrange>
+          - nmap -n -Pn -T5 -sS <current_IPrange>
+            - nmap NSE scripts
+              - NFS
+              - SMB
+    - Pivoting
+      - SSH Proxy Tunneling with Proxychain
+        - http://magikh0e.ihtb.org/pubPapers/ssh_gymnastics_tunneling.html
+  - External
+    - Scanning
+      - Nmap
+      - Unicornscan
+      - OneTwoPunch
+        - Combines nmap and unicorn scan https://github.com/superkojiman/onetwopunch/blob/master/onetwopunch.sh
+- Exploitation
+  - External
+    - Web Vulnerability Scanners
+      - Burp
+        - https://portswigger.net/burp/
+        - My Guide: http://pastebin.com/nNHYP9Jd
+      - Wapiti
+        - http://wapiti.sourceforge.net/
+      - w3af
+        - http://w3af.org/
+      - Nikto
+        - https://cirt.net/Nikto2
+    - Framework
+      - web2attack
+        - https://github.com/santatic/web2attack
+    - Command Line Tools
+      - CMSmap
+        - https://github.com/Dionach/CMSmap
+      - WPscan
+        - https://wpscan.org/
+      - Joomscan
+        - https://www.owasp.org/index.php/Category:OWASP_Joomla_Vulnerability_Scanner_Project
+  - Internal
+    - LAN Attacks
+      - Local Python Server -
+        - Serve Shells/Exploits
+          - Python -M SimpleHTTPServer <port>
+        - LLMNR/NBT-NS Poisoning
+          - Responder - https://github.com/SpiderLabs/Responder
+            - Listen/respond to LLMNR NBTNS requests
+    - Local Vulnerability Scanning
+      - LinEnum- https://github.com/rebootuser/LinEnum
+      - Unix-privesc-check
+      - Linux_Exploit_Suggester
+    - Comprehensive Linux Enumeration
+      - http://www.rebootuser.com/?p=1623
+    - Bypass AV
+      - PowerSploit - Python Powershell Shell
+        - https://www.hackingloops.com/powersploit-quick-shell-for-penetration-testing/
+      - Download Files via Command Line
+        - https://www.greyhathacker.net/?p=500
+    - Reverse Shells
+      - http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+      - https://highon.coffee/blog/reverse-shell-cheat-sheet/
+    - Attack Tools
+      - Responder - https://github.com/SpiderLabs/Responder
+      - SMBExec - https://github.com/pentestgeek/smbexec
+      - WCE - http://www.darknet.org.uk/2015/02/windows-credentials-editor-wce-list-add-change-logon-sessions/
+- Post-Exploitation
+  - Comprehensive Wiki
+    - http://pwnwiki.io/#!index.md
+  - Pivoting
+    - Stealing Hashes
+      - WCE - http://www.darknet.org.uk/2015/02/windows-credentials-editor-wce-list-add-change-logon-sessions/
+    - Password Sniffing
+      - Tcpdump
+        - tcpdump -i eth0 port http or port ftp or port smtp or port imap or port pop3 -l -A | egrep –i 'pass=|pwd=|log=|login=|user=|username=|pw=|passw=|passwd=|password=||name=|name:|pass:|user:|username:|password:|login:|pass |user ' --color=auto --line-
+      - Ngrep
+        - ngrep -q -W byline "GET|POST HTTP"
+      - Dsniff
+        - dsniff -m
+  - Attack Frameworks/Tools
+    - Empire
+      - http://www.powershellempire.com/
+    - Armitage
+      - http://blog.cobaltstrike.com/2016/05/25/raffis-abridged-guide-to-cobalt-strike/
+    - Privilege Escalation
+      - PowerSploit - https://github.com/PowerShellMafia/PowerSploit
+  - Download Files via Command Line
+    - https://www.greyhathacker.net/?p=500
+  - Information Gathering
+    - LinEnum - http://www.rebootuser.com/?p=1758
+- Exfiltration
+  - Detection Capabilities
+    - Egress-Assess
+      - https://github.com/ChrisTruncer/Egress-Assess
+    - Outbound Port Detection (find unfiltered outbound connections)
+      - http://www.floyd.ch/?p=352
+  - Network Exfiltration
+- Phishing
+  - Important: Immediately pivot from initial host
+  - Tools
+    - Empire
+      - https://enigma0x3.net/2016/03/15/phishing-with-empire/
+    - Gophish
+      - https://github.com/gophish/gophish
+  - Initial Access Techniques
+    - Office Macros
+  - Tools for Internal Use
+    - PowerView - stealuserhunter
+- Misc.
+  - Find Exploits
+    - Linux
+      - Command line
+        - searchsploit -e Windows 7
+          - searchsploit windows 2007 | grep -i local
+    - Web
+      - Exploit-db
+        - https://www.exploit-db.com/
+      - Packet Storm
+        - https://packetstormsecurity.com/files/tags/exploit
+  - Various Automation
+    - https://github.com/leebaird/discover

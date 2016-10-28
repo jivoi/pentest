@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+import sys
+
+if len(sys.argv) != 2:
+    print "null_hydra <ip address> <user or .txt list> <password list> <service> <port>"
+    print "null_hydra 192.168.15.216 users.txt /usr/share/wordlists/metasploit/unix_passwords.txt ftp"
+    sys.exit(0)
+
+to_encode = sys.argv[1].strip()
+
+url_escape_table = {
+    ".": "%2E",
+    ":": "%3A",
+    "/": "%2F",
+    " ": "%20",
+    "&": "%26",
+    '"': "%22",
+    "'": "%27",
+    ">": "%3E",
+    "<": "%3C",
+}
+
+
+def url_escape(text):
+    """Produce entities within text."""
+    return "".join(url_escape_table.get(c, c) for c in text)
+
+
+encoded = url_escape(to_encode)
+print(encoded)

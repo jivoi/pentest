@@ -1,0 +1,2 @@
+shell
+net group "Domain Admins" /domain & net group "Domain Controllers" /domain & net accounts /domain & net localgroup "Administrators" & net users & net use & whoami /all & arp -a & netstat -a -n -p tcp | find "LISTEN"

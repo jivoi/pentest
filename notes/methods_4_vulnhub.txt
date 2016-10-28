@@ -1,0 +1,197 @@
+Common tools and methods used in Vulnhub CTF's - DigiP's list - Please update :)
+--------------------------------------------------------------------------------
+	Some spoilers in the myst...
+
+never forget to check sudo -l on a system for interesting info on what you can
+run (if configured) as root
+
+Various sites of help for https://www.vulnhub.com/ vm's
+	Great Password/name/directory wordlists!!
+		https://github.com/danielmiessler/SecLists/tree/master/Passwords
+	Quick URL Encode/decode
+		http://meyerweb.com/eric/tools/dencoder/
+	Various online text conversions
+		http://www.unit-conversion.info/texttools/strip-tags/#data
+	TTY Shells help	
+		http://netsec.ws/?p=337
+		* Check for interactive versions of nmap, quickest shell to 
+		get root if perms 4755
+			find / -perm 4755 -type f | grep nmap
+	AQK Help
+		http://www.tutorialspoint.com/awk/awk_basic_examples.htm
+	SED Help	
+		http://sed.sourceforge.net/sed1line.txt
+	Mysql dumping
+	http://stackoverflow.com/questions/14931001/select-from-all-tables-mysql
+	Thourough EXIF data extraction tool - really good image EXIF tool
+		http://regex.info/exif.cgi
+	(Seems to work better than kali installed exif console tool)
+	MD5 cracking. Place hash in place of "c39cd4df8f2e35d20d92c2e44de5f7c6" 
+	for quick search via this url:
+	http://md5cracker.org/decrypted-md5-hash/c39cd4df8f2e35d20d92c2e44de5f7c6
+	Multi hash cracking all at once and against multiple hash types! 
+		(Send multiple hash types into queue and run in mass decode)
+		https://md5hashing.net/hash_type_checker
+
+	basic understanding of tar, unzip, bzip, and like utils
+
+base64 - use to encode or decode base64 strings
+
+	ex: 
+		root@kali:~/# echo foo | base64
+		Zm9vCg==
+		root@kali:~/# echo Zm9vCg== | base64 -d
+		foo
+		root@kali:~/# 
+
+
+netdiscover - find local machines on network, only on same subnet
+
+	Scan range ex: netdiscover -r 192.168.1.0/24
+	
+nmap - scan network, host discover, port scan, etc
+
+	Quick network arp scan: get mac and ip address.
+	(--open helps trick to only show seen nodes,less output)
+	nmap -sA -vv -n -PN -T5 --open 192.168.1.0/24
+	
+	Port scan range for only open ports and services
+	(TCP only - use -sU for UDP)
+	nmap -sC -sV -n -vv -T3 --open -p- 192.168.1.0/24
+
+sparta - scan network, also good reporting tool for saving logged info, various 
+	gui controls, self explanatory
+
+	usage: sparta 
+	(opens gui, add host, have at it)
+
+nc | netcat - muti-functional network tool. can connect to other systems, 
+	use SSL, or start listner to chat, recieve or send reverse shell
+
+	ex: nc -uv target port
+		will use UDP (-u) and connect to target on port specified
+	ex: nc -u -lvp 1234
+		listen on port 1234 for incoming connection
+	ex: nc -ssl target port
+		connect to target on port using ssl negotiations. can listen 
+		with SSL as well for secure egress
+	machine 1: nc -ssl -lvp 444 > file.txt
+	machine 2: nc -ssl -nv target 444 < send-this-file.txt
+		will listen on machine 1 for file form machine 2 and save the 
+		document over SSL
+
+objdump - get various binary info help. Used to debug info for non running 
+	programs ex: 
+	root@kali:~/necromancer# objdump -f talisman
+
+	talisman:     file format elf32-i386
+	architecture: i386, flags 0x00000112:
+	EXEC_P, HAS_SYMS, D_PAGED
+	start address 0x08048350
+	
+On an amd64 machine, the above binary will not run without i386 utils. 
+	In kali 2.0 2016.1 rolling, install "lib32z1" 
+	(lib32z1 replaces ia32-libs)
+		apt-get install lib32z1
+	now you can run the elf32-i386 program in amd64 :)
+
+gdb - debugger for programs
+
+	ex: gdb program
+	
+	gdb talisman
+	info functions
+	Non-debugging symbols:
+	0x080482d0  _init
+	0x08048310  printf@plt
+	0x08048320  __libc_start_main@plt
+	0x08048330  __isoc99_scanf@plt
+	0x08048350  _start
+	0x08048380  __x86.get_pc_thunk.bx
+	0x08048390  deregister_tm_clones
+	0x080483c0  register_tm_clones
+	0x08048400  __do_global_dtors_aux
+	0x08048420  frame_dummy
+	0x0804844b  unhide
+	0x0804849d  hide
+	0x080484f4  myPrintf
+	0x08048529  wearTalisman
+	0x08048a13  main
+	0x08048a37  chantToBreakSpell
+	0x08049530  __libc_csu_init
+	0x08049590  __libc_csu_fini
+	0x08049594  _fini
+
+binwalk - scan various file types, get info
+
+	ex:	
+	binwalk -B file
+		(show file info)
+	binwalk -e file
+		(extract compressed archives from target - try images! ie: jpg)
+
+--------------------------------------------------------------------------------
+WARNING - Disclaimer - gobuster, cewl and dirbuster, may cause IDS or 
+          mod_security types to ban you! You may no longer be able to visit a 
+          target after crushing them with requests! Do on targets you own! 
+          staap pointing yoru laser at the www.
+--------------------------------------------------------------------------------
+
+gobuster - similar to dirbuster, but dead simple and fast cmdline util
+
+	ex: 
+	gobuster -e -w wordlist.txt -u site.com -s [responsecode] -a "UserAgent"
+	where response code is valid http return codes such as 200, 301, 302, 
+	404, 403, etc. -x lets you choose a file extension to append to words
+	See gobuster -h for lots more it can do!
+
+cewl - digininjas wordlist helper. Before using gobuster, having good subject 
+	matter for words related to your target is crucial. ex: 
+cewl -m 4 -d 0 -w wordlist.txt --ua "User Agent - They are important" target
+	-d is the depth to spider on the site. For large sites, this can run a 
+	long time with a larger depth. 	If all you want is a single page, 
+	go 0 for the main site page. -m is the min word length to save. 
+	gobuster and dirbuster can take these and add file extennions as well!
+
+dirbuster - follows wordlist to brute force directories. run the gui to see
+
+
+aircrack-ng - crack wifi pcap/cap files
+
+	ex: aircrack-ng -a 2 file.cap -w /root/wordlist.txt
+	(-a 2 designates wpa, -a 1 is wep)
+
+snmp-check - snmp enumeration tool to interigate community id's for info
+
+	ex: snmp -c communityname -t target.ip.or.hostname
+
+wireshark | tshark - wireshark GUI packet sniffer, tshark cmdline packet sniffer
+
+snmpwalk - get MIB string index and snmp community info
+
+	ex: snmpwalk -c COMMUNITYSTRING -v2c -On TARGET
+
+snmp-set - set MIB index variables
+
+	ex: snmpset -v 2c -c COMMUNITYSTRING TARGET #.#.#string#.#.# s "Command"
+	s "Command" sets the option on #.#.#string#.#.# MIB string output 
+	from snmpwalk
+
+hashcat - crack hashes
+	
+	MD5 hash ex: 
+	hashcat -m 0 -a 0 md5.txt /usr/share/wordlists/rockyou.txt
+	md5.txt is your list of hashes to crack against your wordlist which is 
+	last argument.
+	
+ncrack - brute force logins with ncrack
+
+	guess passwords ex: 
+		ncrack -p 22 --user root -P 500-worst-passwords.txt 10.10.10.10
+	guess users ex: 
+		ncrack -p 22 -U wordlist.txt --pass knownpass 10.10.10.10
+
+
+
+
+This is by no means a complete list. Feel free to update and add to. Give me a shout on twitter @xxDigiPxx

